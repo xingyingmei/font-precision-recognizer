@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Font Recognition - Font Precision Recognizer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">🎨 Font Precision Recognizer</div>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/recognize" class="active">Recognize</a></li>
+                <li><a href="/search">Search</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container main-content">
+        <div class="recognize-wrapper">
+            <h1>🖼️ Upload Image to Recognize Fonts</h1>
+            
+            <div class="upload-section">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📤</div>
+                    <h3>Drag & drop your image here</h3>
+                    <p>or click to select a file</p>
+                    <input type="file" id="imageInput" accept="image/*" hidden>
+                </div>
+                
+                <div id="imagePreview" style="display: none;">
+                    <img id="previewImage" src="" alt="Preview">
+                    <button class="btn btn-sm btn-secondary" id="removeImage">Change Image</button>
+                </div>
+            </div>
+
+            <div class="supported-formats">
+                <strong>Supported formats:</strong> PNG, JPG, JPEG, GIF, BMP, WEBP, TIFF, SVG (Max 10MB)
+            </div>
+
+            <button class="btn btn-primary btn-lg" id="recognizeBtn" disabled>
+                🔍 Recognize Fonts
+            </button>
+
+            <div id="loadingSpinner" class="spinner" style="display: none;"></div>
+
+            <div id="results" class="results-section" style="display: none;">
+                <h2>Recognized Fonts</h2>
+                <div id="fontsList"></div>
+            </div>
+
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Font Precision Recognizer. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/recognition.js') }}"></script>
+</body>
+</html>
