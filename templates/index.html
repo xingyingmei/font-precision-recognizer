@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Font Precision Recognizer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">🎨 Font Precision Recognizer</div>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/recognize">Recognize</a></li>
+                <li><a href="/search">Search</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <div class="container">
+            <h1>Identify Fonts Instantly</h1>
+            <p>Upload an image or enter a font name to find it across 18+ global repositories</p>
+            
+            <div class="action-buttons">
+                <a href="/recognize" class="btn btn-primary">🖼️ Recognize from Image</a>
+                <a href="/search" class="btn btn-secondary">🔍 Search by Name</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="features">
+        <div class="container">
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3>AI-Powered Recognition</h3>
+                    <p>Uses advanced AI to accurately identify fonts from any image</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Multi-Source Database</h3>
+                    <p>Access to 18+ premium font repositories worldwide</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💳</div>
+                    <h3>Free & Commercial</h3>
+                    <p>Find both free and commercial fonts with direct links</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Instant Results</h3>
+                    <p>Get results in seconds with high accuracy</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sources-preview">
+        <div class="container">
+            <h2>Supported Font Sources</h2>
+            <div class="sources-grid" id="sourcesPreview">
+                <p>Loading sources...</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Font Precision Recognizer. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        // Load and display sources
+        fetch('/api/sources')
+            .then(response => response.json())
+            .then(data => {
+                const sourcesPreview = document.getElementById('sourcesPreview');
+                sourcesPreview.innerHTML = data.sources
+                    .slice(0, 6)
+                    .map(source => `
+                        <div class="source-item">
+                            <strong>${source.name}</strong>
+                            <small>${source.type}</small>
+                        </div>
+                    `).join('');
+            })
+            .catch(error => console.error('Error loading sources:', error));
+    </script>
+</body>
+</html>
