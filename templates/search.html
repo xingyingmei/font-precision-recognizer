@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Font Search - Font Precision Recognizer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">🎨 Font Precision Recognizer</div>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/recognize">Recognize</a></li>
+                <li><a href="/search" class="active">Search</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container main-content">
+        <div class="search-wrapper">
+            <h1>🔍 Search for Fonts</h1>
+            
+            <div class="search-section">
+                <div class="search-form">
+                    <input type="text" id="searchQuery" placeholder="Enter font name or description..." class="search-input">
+                    
+                    <div class="filters">
+                        <select id="fontType" class="filter-select">
+                            <option value="">All Types</option>
+                            <option value="serif">Serif</option>
+                            <option value="sans-serif">Sans-Serif</option>
+                            <option value="script">Script</option>
+                            <option value="display">Display</option>
+                            <option value="monospace">Monospace</option>
+                        </select>
+                        
+                        <select id="licenseType" class="filter-select">
+                            <option value="">All Licenses</option>
+                            <option value="free">Free</option>
+                            <option value="commercial">Commercial</option>
+                            <option value="subscription">Subscription</option>
+                        </select>
+                    </div>
+                    
+                    <button class="btn btn-primary" id="searchBtn">Search</button>
+                </div>
+            </div>
+
+            <div id="loadingSpinner" class="spinner" style="display: none;"></div>
+
+            <div id="results" class="results-section" style="display: none;">
+                <h2>Search Results</h2>
+                
+                <div id="localMatches" class="local-matches" style="display: none;">
+                    <h3>Local Database Matches</h3>
+                    <div id="matchesList"></div>
+                </div>
+                
+                <div id="sourceLinks" class="source-links">
+                    <h3>Search in Font Repositories</h3>
+                    <p>Click on any source below to search for your font:</p>
+                    <div id="linksList" class="links-grid"></div>
+                </div>
+            </div>
+
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Font Precision Recognizer. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        document.getElementById('searchBtn').addEventListener('click', performSearch);
+        document.getElementById('searchQuery').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') performSearch();
+        });
+
+        function performSearch() {
+            const query = document.getElementById('searchQuery').value;
+            const fontType = document.getElementById('fontType').value;
+            const licenseType = document.getElementById('licenseType').value;
+
+            if (!query.trim()) {
+                showError('Please enter a font name to search');
+                return;
+            }
+
+            showLoading();
+
+            const params = new URLSearchParams({
+                query: query,
+                ...(fontType && { type: fontType }),
+                ...(licenseType && { license: licenseType })
+            });
+
+            fetch(`/api/search-font?${params}`)
+                .then(response => response.json())
+                .then(data => {
+                    displayResults(data.results);
+                    hideLoading();
+                })
+                .catch(error => {
+                    showError('Error performing search: ' + error.message);
+                    hideLoading();
+                });
+        }
+
+        function displayResults(results) {
+            document.getElementById('results').style.display = 'block';
+            
+            // Display local matches
+            if (results.local_matches && results.local_matches.length > 0) {
+                document.getElementById('localMatches').style.display = 'block';
+                const matchesList = document.getElementById('matchesList');
+                matchesList.innerHTML = results.local_matches
+                    .map(font => `
+                        <div class="match-card">
+                            <h4>${font.name}</h4>
+                            <p>Type: ${font.type || 'Unknown'}</p>
+                            <p>License: ${font.license || 'Unknown'}</p>
+                        </div>
+                    `).join('');
+            }
+            
+            // Display source links
+            const linksList = document.getElementById('linksList');
+            linksList.innerHTML = results.source_links
+                .map(source => `
+                    <a href="${source.url}" target="_blank" class="link-card">
+                        <strong>${source.name}</strong>
+                        <small>${source.availability}</small>
+                    </a>
+                `).join('');
+        }
+
+        function showLoading() {
+            document.getElementById('loadingSpinner').style.display = 'block';
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingSpinner').style.display = 'none';
+        }
+
+        function showError(message) {
+            const errorEl = document.getElementById('errorMessage');
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+            setTimeout(() => {
+                errorEl.style.display = 'none';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
