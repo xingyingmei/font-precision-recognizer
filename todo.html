@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="A local-storage todo list application">
+  <meta name="description" content="A local-storage todo list application with editing, priority, dates, dark mode, and drag-and-drop ordering">
   <title>Todo List</title>
   <link rel="stylesheet" href="static/css/todo.css">
 </head>
@@ -14,12 +14,26 @@
         <p class="eyebrow">Personal planner</p>
         <h1 id="page-title">Todo List</h1>
       </div>
-      <button id="clear-completed" class="button button-quiet" type="button">Clear completed</button>
+      <div class="header-actions">
+        <button id="theme-toggle" class="button button-quiet" type="button" aria-label="Toggle dark mode">🌙</button>
+        <button id="clear-completed" class="button button-quiet" type="button">Clear completed</button>
+      </div>
     </header>
 
     <form id="todo-form" class="todo-form">
       <label class="sr-only" for="todo-input">Add a task</label>
       <input id="todo-input" name="todo" type="text" maxlength="200" placeholder="What needs to be done?" autocomplete="off" required>
+
+      <label class="sr-only" for="todo-priority">Priority</label>
+      <select id="todo-priority" class="mini-field" aria-label="Task priority">
+        <option value="low">Low</option>
+        <option value="medium" selected>Medium</option>
+        <option value="high">High</option>
+      </select>
+
+      <label class="sr-only" for="todo-due-date">Due date</label>
+      <input id="todo-due-date" class="mini-field" type="date" aria-label="Due date">
+
       <button class="button button-primary" type="submit">Add task</button>
     </form>
 
