@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A local-storage todo list application">
+  <title>Todo List</title>
+  <link rel="stylesheet" href="static/css/todo.css">
+</head>
+<body>
+  <main class="app" aria-labelledby="page-title">
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">Personal planner</p>
+        <h1 id="page-title">Todo List</h1>
+      </div>
+      <button id="clear-completed" class="button button-quiet" type="button">Clear completed</button>
+    </header>
+
+    <form id="todo-form" class="todo-form">
+      <label class="sr-only" for="todo-input">Add a task</label>
+      <input id="todo-input" name="todo" type="text" maxlength="200" placeholder="What needs to be done?" autocomplete="off" required>
+      <button class="button button-primary" type="submit">Add task</button>
+    </form>
+
+    <section class="toolbar" aria-label="Todo controls">
+      <span id="todo-count" class="count">0 tasks left</span>
+      <div class="filters" role="group" aria-label="Filter tasks">
+        <button class="filter is-active" type="button" data-filter="all" aria-pressed="true">All</button>
+        <button class="filter" type="button" data-filter="active" aria-pressed="false">Active</button>
+        <button class="filter" type="button" data-filter="completed" aria-pressed="false">Completed</button>
+      </div>
+    </section>
+
+    <ul id="todo-list" class="todo-list" aria-live="polite"></ul>
+    <p id="empty-state" class="empty-state">No tasks yet. Add one above.</p>
+    <p class="storage-note">Your tasks are saved only in this browser using local storage.</p>
+  </main>
+  <script src="static/js/todo.js"></script>
+</body>
+</html>
