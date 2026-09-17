@@ -47,8 +47,11 @@ h1 { margin: 0; font-size: clamp(2rem, 6vw, 3rem); letter-spacing: -.05em; }
 .filter.is-active { color: #3730a3; background: #e0e7ff; font-weight: 700; }
 
 .todo-list { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
-.todo-item { gap: 12px; padding: 14px; border: 1px solid #e5e7eb; border-radius: 12px; background: #fff; }
-.todo-item label { min-width: 0; display: flex; align-items: center; gap: 12px; flex: 1; }
+.todo-item { gap: 12px; padding: 14px; border: 1px solid #e5e7eb; border-radius: 12px; background: #fff; cursor: grab; transition: opacity .15s, transform .15s, border-color .15s, box-shadow .15s; }
+.todo-item:active { cursor: grabbing; }
+.todo-item.is-dragging { opacity: .45; transform: scale(.98); }
+.todo-item.drag-over { border-color: #6366f1; box-shadow: 0 0 0 3px #e0e7ff; }
+.todo-item label { min-width: 0; display: flex; align-items: center; gap: 12px; flex: 1; cursor: pointer; }
 .todo-item input[type="checkbox"] { width: 19px; height: 19px; accent-color: #4f46e5; cursor: pointer; }
 .todo-text { overflow-wrap: anywhere; }
 .todo-item.completed .todo-text { color: #94a3b8; text-decoration: line-through; }

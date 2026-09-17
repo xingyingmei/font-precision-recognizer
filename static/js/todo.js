@@ -12,6 +12,7 @@
 
   let todos = loadTodos();
   let currentFilter = 'all';
+  let draggedId = null;
 
   function loadTodos() {
     try {
@@ -42,6 +43,13 @@
       const item = document.createElement('li');
       item.className = `todo-item${todo.completed ? ' completed' : ''}`;
       item.dataset.id = todo.id;
+      item.draggable = true;
+      item.title = 'Drag to reorder';
+      item.addEventListener('dragstart', handleDragStart);
+      item.addEventListener('dragover', handleDragOver);
+      item.addEventListener('dragleave', handleDragLeave);
+      item.addEventListener('drop', handleDrop);
+      item.addEventListener('dragend', handleDragEnd);
 
       const label = document.createElement('label');
       const checkbox = document.createElement('input');
@@ -74,6 +82,46 @@
       button.classList.toggle('is-active', active);
       button.setAttribute('aria-pressed', String(active));
     });
+  }
+
+  function handleDragStart(event) {
+    draggedId = event.currentTarget.dataset.id;
+    event.currentTarget.classList.add('is-dragging');
+    event.dataTransfer.effectAllowed = 'move';
+    event.dataTransfer.setData('text/plain', draggedId);
+  }
+
+  function handleDragOver(event) {
+    event.preventDefault();
+    if (event.currentTarget.dataset.id !== draggedId) {
+      event.currentTarget.classList.add('drag-over');
+    }
+    event.dataTransfer.dropEffect = 'move';
+  }
+
+  function handleDragLeave(event) {
+    event.currentTarget.classList.remove('drag-over');
+  }
+
+  function handleDrop(event) {
+    event.preventDefault();
+    const targetId = event.currentTarget.dataset.id;
+    if (!draggedId || draggedId === targetId) return;
+
+    const fromIndex = todos.findIndex(todo => todo.id === draggedId);
+    const toIndex = todos.findIndex(todo => todo.id === targetId);
+    if (fromIndex === -1 || toIndex === -1) return;
+
+    const [movedTodo] = todos.splice(fromIndex, 1);
+    todos.splice(toIndex, 0, movedTodo);
+    saveTodos();
+    render();
+  }
+
+  function handleDragEnd(event) {
+    draggedId = null;
+    event.currentTarget.classList.remove('is-dragging');
+    list.querySelectorAll('.drag-over').forEach(item => item.classList.remove('drag-over'));
   }
 
   function addTodo(text) {
